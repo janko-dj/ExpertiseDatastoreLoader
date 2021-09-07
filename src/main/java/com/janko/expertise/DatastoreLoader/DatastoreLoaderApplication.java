@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAutoConfiguration
 @EnableScheduling
 public class DatastoreLoaderApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(DatastoreLoaderApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(DatastoreLoaderApplication.class, args);
+    }
 }
