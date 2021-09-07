@@ -6,10 +6,8 @@ import com.google.cloud.datastore.Key;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class DatastoreService {
+public class DatastoreService implements ServiceInterface {
 
     private final Datastore datastore;
 

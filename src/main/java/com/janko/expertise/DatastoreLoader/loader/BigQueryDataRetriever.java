@@ -6,7 +6,7 @@ import com.google.cloud.datastore.Key;
 import com.janko.expertise.DatastoreLoader.cache.SNCache;
 import com.janko.expertise.DatastoreLoader.constants.BQQueries;
 import com.janko.expertise.DatastoreLoader.constants.DatastoreConstants;
-import com.janko.expertise.DatastoreLoader.service.DatastoreService;
+import com.janko.expertise.DatastoreLoader.service.ServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,13 @@ import java.util.concurrent.Executors;
 public class BigQueryDataRetriever {
 
     private final BigQuery bigquery;
-    private final DatastoreService datastoreService;
+    private final ServiceInterface datastoreService;
     private final SNCache snCache;
     private Map<String, Double> datastoreKeyValueMap;
 
 
     @Autowired
-    public BigQueryDataRetriever(BigQuery bigquery, DatastoreService datastoreService, SNCache snCache) {
+    public BigQueryDataRetriever(BigQuery bigquery, ServiceInterface datastoreService, SNCache snCache) {
         this.bigquery = bigquery;
         this.datastoreService = datastoreService;
         this.snCache = snCache;
