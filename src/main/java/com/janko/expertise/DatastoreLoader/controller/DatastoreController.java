@@ -41,13 +41,17 @@ public class DatastoreController {
     public ResponseEntity<Object> getSingleMachineData(@PathVariable(value = "kind") String kind,
                                                        @PathVariable(value = "id") String id) {
         logger.info("getSingleMachineData called with kind: {}, id: {}", kind, id);
+        //TODO: validation of params
         Key key = datastoreService.getTaskKey(kind, id);
         Entity entity = datastoreService.getEntityByKey(key);
         if (entity != null) {
+            logger.info("getSingleMachineData successful!");
             DatastoreResponse datastoreResponse = ResponseTransformer.transformResponse(entity, id);
+            logger.info("Data retrieved: {}", datastoreResponse);
             return new ResponseEntity<>(datastoreResponse, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(String.format("Bad data provided, '%s' or '%s'", kind, id), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("{\"ErrorMessage\"=\"Bad data provided, '" + kind + "' or '" + id + "'\"}",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }

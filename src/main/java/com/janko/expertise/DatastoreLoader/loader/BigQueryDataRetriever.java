@@ -7,6 +7,8 @@ import com.janko.expertise.DatastoreLoader.cache.SNCache;
 import com.janko.expertise.DatastoreLoader.constants.BQQueries;
 import com.janko.expertise.DatastoreLoader.constants.DatastoreConstants;
 import com.janko.expertise.DatastoreLoader.service.ServiceInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,8 @@ import java.util.concurrent.Executors;
 
 @Component
 public class BigQueryDataRetriever {
+
+    private final Logger logger = LoggerFactory.getLogger(BigQueryDataRetriever.class);
 
     private final BigQuery bigquery;
     private final ServiceInterface datastoreService;
@@ -32,15 +36,17 @@ public class BigQueryDataRetriever {
         this.datastoreKeyValueMap = new HashMap<>();
     }
 
+    //add retryable
     @Scheduled(fixedRateString = "${scheduleTime}")
-    public void getDataFromBigQueryAndUploadToDatastore() {
+    public void getDataFromBigQueryAndUploadToDatastore() throws InterruptedException {
         TableResult distinctSNResults = null;
         List<String> serialNumbers = new ArrayList<>();
         try {
+            logger.info("Calling BQ with query: {}", BQQueries.SELECT_DISTINCT_SERIAL_NUMBERS);
             distinctSNResults = getResult(BQQueries.SELECT_DISTINCT_SERIAL_NUMBERS);
         } catch (InterruptedException e) {
-            //log
-            e.printStackTrace();
+            logger.error("Error calling: {}", BQQueries.SELECT_DISTINCT_SERIAL_NUMBERS);
+            throw new InterruptedException();
         }
         ExecutorService executorService = Executors.newFixedThreadPool(6);
 
@@ -48,11 +54,12 @@ public class BigQueryDataRetriever {
 
             String sn = row.get("sn").getStringValue();
             serialNumbers.add(sn);
+            logger.info("Submitting task to the thread pool!");
             executorService.submit(() -> {
                 try {
                     bigqueryToDatastore(sn);
                 } catch (InterruptedException e) {
-                    //log
+                    logger.error("ERROR executing task, thread interrupted!!!");
                     e.printStackTrace();
                 }
             });
@@ -61,22 +68,17 @@ public class BigQueryDataRetriever {
     }
 
     private void bigqueryToDatastore(String sn) throws InterruptedException {
-        //log + timestamp
+        logger.info("{} started executing the task", Thread.currentThread().getName());
         TableResult minWorkHour = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_WORK_HOUR, "sn", sn));
         TableResult maxWorkHour = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_WORK_HOUR, "sn", sn));
 
         for (String descriptionKey : BQQueries.queries.keySet()) {
             TableResult result = getResult(BQQueries.selectQuery(BQQueries.queries.get(descriptionKey), "sn", sn));
             Double value = getDoubleValue(result, descriptionKey);
-            System.out.println(descriptionKey + ": " + value);
             datastoreKeyValueMap.put(descriptionKey, value);
         }
         Double totalWorkingHours = getDoubleValue(maxWorkHour, "max");
         Double totalWorkingHoursMadeThatDay = totalWorkingHours - getDoubleValue(minWorkHour, "min");
-
-        System.out.println("Total Work hour: " + totalWorkingHours);
-        System.out.println("Number of Work hours that day: " + totalWorkingHoursMadeThatDay);
-        System.out.println(sn);
 
         Key taskKey = datastoreService.getTaskKey("claas", sn);
 
@@ -92,7 +94,7 @@ public class BigQueryDataRetriever {
                 .build();
 
         datastoreService.putEntity(task);
-        //log + timestamp
+        logger.info("{} finished execution.\n{} uploaded to the Datastore", Thread.currentThread().getName(), task);
     }
 
     private double getDoubleValue(TableResult result, String key) {

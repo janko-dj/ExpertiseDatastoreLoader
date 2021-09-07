@@ -100,4 +100,19 @@ public class DatastoreResponse {
     public void setTotalWorkingHoursMadeThatDay(Double totalWorkingHoursMadeThatDay) {
         this.totalWorkingHoursMadeThatDay = totalWorkingHoursMadeThatDay;
     }
+
+    @Override
+    public String toString() {
+        return "DatastoreResponse{" +
+                "serialNumber='" + serialNumber + '\'' +
+                ", minimumFuelConsumption=" + minimumFuelConsumption +
+                ", averageFuelConsumption=" + averageFuelConsumption +
+                ", maximumFuelConsumption=" + maximumFuelConsumption +
+                ", minimumEngineLoad=" + minimumEngineLoad +
+                ", averageEngineLoad=" + averageEngineLoad +
+                ", maximumEngineLoad=" + maximumEngineLoad +
+                ", totalWorkingHours=" + totalWorkingHours +
+                ", totalWorkingHoursMadeThatDay=" + totalWorkingHoursMadeThatDay +
+                '}';
+    }
 }
