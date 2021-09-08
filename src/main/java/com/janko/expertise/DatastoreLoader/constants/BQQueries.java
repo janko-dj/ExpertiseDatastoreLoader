@@ -15,6 +15,15 @@ public class BQQueries {
     public static final String SELECT_MIN_FUEL_CONSUMPTION = "SELECT MIN(fuel_cnsmptn) as minimumFuelConsumption FROM claas_telematics_dataset.tlmtcs_tbl";
     public static final String SELECT_AVG_FUEL_CONSUMPTION = "SELECT AVG(fuel_cnsmptn) as averageFuelConsumption FROM claas_telematics_dataset.tlmtcs_tbl";
     public static final String SELECT_MAX_FUEL_CONSUMPTION = "SELECT MAX(fuel_cnsmptn) as maximumFuelConsumption FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_MIN_ENGINE_SPEED = "SELECT MIN(engn_spd) as minimumEngineSpeed FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_AVG_ENGINE_SPEED = "SELECT AVG(engn_spd) as averageEngineSpeed FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_MAX_ENGINE_SPEED = "SELECT MAX(engn_spd) as maximumEngineSpeed FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_MIN_SPEED_FRONT_PTO = "SELECT MIN(spd_front_pto) as minimumSpeedFrontPTO FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_AVG_SPEED_FRONT_PTO = "SELECT AVG(spd_front_pto) as averageSpeedFrontPTO FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_MAX_SPEED_FRONT_PTO = "SELECT MAX(spd_front_pto) as maximumSpeedFrontPTO FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_MIN_SPEED_REAR_PTO = "SELECT MIN(spd_rear_pto) as minimumSpeedRearPTO FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_AVG_SPEED_REAR_PTO = "SELECT AVG(spd_rear_pto) as averageSpeedRearPTO FROM claas_telematics_dataset.tlmtcs_tbl";
+    public static final String SELECT_MAX_SPEED_REAR_PTO = "SELECT MAX(spd_rear_pto) as maximumSpeedRearPTO FROM claas_telematics_dataset.tlmtcs_tbl";
     public static Map<String, String> queries;
 
     public static String selectQuery(String constantQuery, String column, String value) {
@@ -36,5 +45,14 @@ public class BQQueries {
         queries.put(DatastoreConstants.MINIMUM_ENGINE_LOAD, SELECT_MIN_ENGINE_LOAD);
         queries.put(DatastoreConstants.AVERAGE_ENGINE_LOAD, SELECT_AVG_ENGINE_LOAD);
         queries.put(DatastoreConstants.MAXIMUM_ENGINE_LOAD, SELECT_MAX_ENGINE_LOAD);
+        queries.put(DatastoreConstants.MINIMUM_ENGINE_SPEED, SELECT_MIN_ENGINE_SPEED);
+        queries.put(DatastoreConstants.AVERAGE_ENGINE_SPEED, SELECT_AVG_ENGINE_SPEED);
+        queries.put(DatastoreConstants.MAXIMUM_ENGINE_SPEED, SELECT_MAX_ENGINE_SPEED);
+        queries.put(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO, SELECT_MIN_SPEED_FRONT_PTO);
+        queries.put(DatastoreConstants.AVERAGE_SPEED_FRONT_PTO, SELECT_AVG_SPEED_FRONT_PTO);
+        queries.put(DatastoreConstants.MAXIMUM_SPEED_FRONT_PTO, SELECT_MAX_SPEED_FRONT_PTO);
+        queries.put(DatastoreConstants.MINIMUM_SPEED_REAR_PTO, SELECT_MIN_SPEED_REAR_PTO);
+        queries.put(DatastoreConstants.AVERAGE_SPEED_REAR_PTO, SELECT_AVG_SPEED_REAR_PTO);
+        queries.put(DatastoreConstants.MAXIMUM_SPEED_REAR_PTO, SELECT_MAX_SPEED_REAR_PTO);
     }
 }

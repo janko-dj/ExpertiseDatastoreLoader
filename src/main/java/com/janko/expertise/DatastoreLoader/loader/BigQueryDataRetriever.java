@@ -91,6 +91,15 @@ public class BigQueryDataRetriever {
                 .set(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION).toString())
                 .set(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION).toString())
                 .set(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION).toString())
+                .set(DatastoreConstants.MINIMUM_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_ENGINE_SPEED).toString())
+                .set(DatastoreConstants.AVERAGE_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_ENGINE_SPEED).toString())
+                .set(DatastoreConstants.MAXIMUM_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_ENGINE_SPEED).toString())
+                .set(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO).toString())
+                .set(DatastoreConstants.AVERAGE_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_SPEED_FRONT_PTO).toString())
+                .set(DatastoreConstants.MAXIMUM_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_SPEED_FRONT_PTO).toString())
+                .set(DatastoreConstants.MINIMUM_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_SPEED_REAR_PTO).toString())
+                .set(DatastoreConstants.AVERAGE_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_SPEED_REAR_PTO).toString())
+                .set(DatastoreConstants.MAXIMUM_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_SPEED_REAR_PTO).toString())
                 .build();
 
         datastoreService.putEntity(task);
