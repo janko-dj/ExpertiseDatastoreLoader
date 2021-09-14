@@ -21,6 +21,8 @@ public class DatastoreConstants {
     public static final String MINIMUM_SPEED_REAR_PTO = "minimumSpeedRearPTO";
     public static final String AVERAGE_SPEED_REAR_PTO = "averageSpeedRearPTO";
     public static final String MAXIMUM_SPEED_REAR_PTO = "maximumSpeedRearPTO";
+    public static final String MAP_CENTER_LATITUDE = "mapCenterLongitude";
+    public static final String MAP_CENTER_LONGITUDE = "mapCenterLatitude";
     public static final List<String> listOfDatastoreConstants;
 
     static {

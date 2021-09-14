@@ -1,8 +1,12 @@
 package com.janko.expertise.DatastoreLoader.model;
 
+import java.util.Map;
+
 public class DatastoreResponse {
 
     private String serialNumber;
+    private Double centerLatitude;
+    private Double centerLongitude;
     private Double minimumFuelConsumption;
     private Double averageFuelConsumption;
     private Double maximumFuelConsumption;
@@ -15,10 +19,14 @@ public class DatastoreResponse {
     public DatastoreResponse() {
     }
 
-    public DatastoreResponse(String serialNumber, Double minimumFuelConsumption, Double averageFuelConsumption,
-                             Double maximumFuelConsumption, Double minimumEngineLoad, Double averageEngineLoad,
-                             Double maximumEngineLoad, Double totalWorkingHours, Double totalWorkingHoursMadeThatDay) {
+    public DatastoreResponse(String serialNumber, Double centerLatitude, Double centerLongitude,
+                             Double minimumFuelConsumption, Double averageFuelConsumption,
+                             Double maximumFuelConsumption, Double minimumEngineLoad,
+                             Double averageEngineLoad, Double maximumEngineLoad, Double totalWorkingHours,
+                             Double totalWorkingHoursMadeThatDay) {
         this.serialNumber = serialNumber;
+        this.centerLatitude = centerLatitude;
+        this.centerLongitude = centerLongitude;
         this.minimumFuelConsumption = minimumFuelConsumption;
         this.averageFuelConsumption = averageFuelConsumption;
         this.maximumFuelConsumption = maximumFuelConsumption;
@@ -27,6 +35,22 @@ public class DatastoreResponse {
         this.maximumEngineLoad = maximumEngineLoad;
         this.totalWorkingHours = totalWorkingHours;
         this.totalWorkingHoursMadeThatDay = totalWorkingHoursMadeThatDay;
+    }
+
+    public Double getCenterLatitude() {
+        return centerLatitude;
+    }
+
+    public void setCenterLatitude(Double centerLatitude) {
+        this.centerLatitude = centerLatitude;
+    }
+
+    public Double getCenterLongitude() {
+        return centerLongitude;
+    }
+
+    public void setCenterLongitude(Double centerLongitude) {
+        this.centerLongitude = centerLongitude;
     }
 
     public String getSerialNumber() {

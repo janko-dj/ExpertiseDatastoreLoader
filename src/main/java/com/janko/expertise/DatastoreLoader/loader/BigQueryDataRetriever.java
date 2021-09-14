@@ -3,9 +3,11 @@ package com.janko.expertise.DatastoreLoader.loader;
 import com.google.cloud.bigquery.*;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import com.janko.expertise.DatastoreLoader.cache.GPSCCache;
 import com.janko.expertise.DatastoreLoader.cache.SNCache;
 import com.janko.expertise.DatastoreLoader.constants.BQQueries;
 import com.janko.expertise.DatastoreLoader.constants.DatastoreConstants;
+import com.janko.expertise.DatastoreLoader.model.GPSCoordinate;
 import com.janko.expertise.DatastoreLoader.service.ServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +27,16 @@ public class BigQueryDataRetriever {
     private final BigQuery bigquery;
     private final ServiceInterface datastoreService;
     private final SNCache snCache;
+    private final GPSCCache gpscCache;
     private Map<String, Double> datastoreKeyValueMap;
 
 
     @Autowired
-    public BigQueryDataRetriever(BigQuery bigquery, ServiceInterface datastoreService, SNCache snCache) {
+    public BigQueryDataRetriever(BigQuery bigquery, ServiceInterface datastoreService, SNCache snCache, GPSCCache gpscCache) {
         this.bigquery = bigquery;
         this.datastoreService = datastoreService;
         this.snCache = snCache;
+        this.gpscCache = gpscCache;
         this.datastoreKeyValueMap = new HashMap<>();
     }
 
@@ -40,7 +44,7 @@ public class BigQueryDataRetriever {
     @Scheduled(fixedRateString = "${scheduleTime}")
     public void getDataFromBigQueryAndUploadToDatastore() throws InterruptedException {
         TableResult distinctSNResults = null;
-        List<String> serialNumbers = new ArrayList<>();
+        List<String> serialNumbers = new LinkedList<>();
         try {
             logger.info("Calling BQ with query: {}", BQQueries.SELECT_DISTINCT_SERIAL_NUMBERS);
             distinctSNResults = getResult(BQQueries.SELECT_DISTINCT_SERIAL_NUMBERS);
@@ -69,8 +73,24 @@ public class BigQueryDataRetriever {
 
     private void bigqueryToDatastore(String sn) throws InterruptedException {
         logger.info("{} started executing the task", Thread.currentThread().getName());
+
+        List<GPSCoordinate> gpsCoordinates = new ArrayList<>();
+        Map<String, List<GPSCoordinate>> machineCoordinatesMap = new HashMap<>();
+
         TableResult minWorkHour = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_WORK_HOUR, "sn", sn));
         TableResult maxWorkHour = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_WORK_HOUR, "sn", sn));
+        TableResult minLongitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_GPS_LONGITUDE, "sn", sn));
+        TableResult maxLongitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_GPS_LONGITUDE, "sn", sn));
+        TableResult minLatitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_GPS_LATITUDE, "sn", sn));
+        TableResult maxLatitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_GPS_LATITUDE, "sn", sn));
+
+        TableResult gpsCoordinatesResult = getResult(BQQueries.selectQuery(BQQueries.SELECT_COORDINATES, "sn", sn));
+        for (FieldValueList row : gpsCoordinatesResult.iterateAll()) {
+
+            gpsCoordinates.add(new GPSCoordinate(Double.valueOf(row.get("gps_lat").getStringValue()),
+                    Double.valueOf(row.get("gps_long").getStringValue())));
+        }
+        gpscCache.addGpsCoordinates(sn, gpsCoordinates);
 
         for (String descriptionKey : BQQueries.queries.keySet()) {
             TableResult result = getResult(BQQueries.selectQuery(BQQueries.queries.get(descriptionKey), "sn", sn));
@@ -79,12 +99,16 @@ public class BigQueryDataRetriever {
         }
         Double totalWorkingHours = getDoubleValue(maxWorkHour, "max");
         Double totalWorkingHoursMadeThatDay = totalWorkingHours - getDoubleValue(minWorkHour, "min");
+        Double centerLongitude = (getDoubleValue(maxLongitude, "max") + getDoubleValue(minLongitude, "min")) / 2;
+        Double centerLatitude = (getDoubleValue(maxLatitude, "max") + getDoubleValue(minLatitude, "min")) / 2;
 
         Key taskKey = datastoreService.getTaskKey("claas", sn);
 
         Entity task = Entity.newBuilder(taskKey)
                 .set(DatastoreConstants.TOTAL_WORKING_HOURS, totalWorkingHours.toString())
                 .set(DatastoreConstants.TOTAL_WORKING_HOURS_THAT_DAY, totalWorkingHoursMadeThatDay.toString())
+                .set(DatastoreConstants.MAP_CENTER_LATITUDE, centerLatitude.toString())
+                .set(DatastoreConstants.MAP_CENTER_LONGITUDE, centerLongitude.toString())
                 .set(DatastoreConstants.MINIMUM_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_ENGINE_LOAD).toString())
                 .set(DatastoreConstants.AVERAGE_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_ENGINE_LOAD).toString())
                 .set(DatastoreConstants.MAXIMUM_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_ENGINE_LOAD).toString())
