@@ -139,6 +139,13 @@ public class BigQueryDataRetriever {
                 .build();
         Job queryDistinctSNJob = bigquery.create(JobInfo.newBuilder(getDistinctSNJob).setJobId(getRandomJobId()).build());
         queryDistinctSNJob = queryDistinctSNJob.waitFor();
+        if (queryDistinctSNJob == null) {
+            logger.error("Job no longer exists");
+            throw new RuntimeException("Job no longer exists");
+        } else if (queryDistinctSNJob.getStatus().getError() != null) {
+            logger.error("Job failed!");
+            throw new RuntimeException(queryDistinctSNJob.getStatus().getError().toString());
+        }
         return queryDistinctSNJob.getQueryResults();
     }
 
