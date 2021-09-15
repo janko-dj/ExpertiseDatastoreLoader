@@ -13,7 +13,7 @@ public class BQQueries {
     public static final String SELECT_MIN_SPEED_FRONT_PTO = "SELECT MIN(spd_front_pto) as minimumSpeedFrontPTO FROM claas_telematics_dataset.tlmtcs_tbl WHERE spd_front_pto > 0 AND ";
     public static final String SELECT_MIN_SPEED_REAR_PTO = "SELECT MIN(spd_rear_pto) as minimumSpeedRearPTO FROM claas_telematics_dataset.tlmtcs_tbl WHERE spd_rear_pto > 0 AND ";
     /**
-     * In real code should use CURRENT_DATE
+     * Real code should use CURRENT_DATE
      */
     public static final String SELECT_NEEDED_VALUES = "SELECT " +
             "min(gps_long)," +

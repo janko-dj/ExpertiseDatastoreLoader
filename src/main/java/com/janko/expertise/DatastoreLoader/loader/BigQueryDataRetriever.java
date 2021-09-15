@@ -88,6 +88,8 @@ public class BigQueryDataRetriever {
         for (String descriptionKey : BQQueries.queries.keySet()) {
             TableResult result = getResult(BQQueries.selectQuery(BQQueries.queries.get(descriptionKey), "sn", sn, false));
             Double value = getDoubleValue(result, descriptionKey);
+            System.out.println(BQQueries.queries.get(descriptionKey));
+            System.out.println(descriptionKey + "  " + value);
             datastoreKeyValueMap.put(descriptionKey, value);
         }
         TableResult allResults = getResult(BQQueries.selectQuery(BQQueries.SELECT_NEEDED_VALUES, "sn", sn, false));

@@ -1,7 +1,5 @@
 package com.janko.expertise.DatastoreLoader.model;
 
-import java.util.Map;
-
 public class DatastoreResponse {
 
     private String serialNumber;
@@ -16,13 +14,19 @@ public class DatastoreResponse {
     private Double minimumEngineSpeed;
     private Double averageEngineSpeed;
     private Double maximumEngineSpeed;
+    private Double minimumFrontPTOSpeed;
+    private Double averageFrontPTOSpeed;
+    private Double maximumFrontPTOSpeed;
+    private Double minimumRearPTOSpeed;
+    private Double averageRearPTOSpeed;
+    private Double maximumRearPTOSpeed;
     private Double totalWorkingHours;
     private Double totalWorkingHoursMadeThatDay;
 
     public DatastoreResponse() {
     }
 
-    public DatastoreResponse(String serialNumber, Double centerLatitude, Double centerLongitude, Double minimumFuelConsumption, Double averageFuelConsumption, Double maximumFuelConsumption, Double minimumEngineLoad, Double averageEngineLoad, Double maximumEngineLoad, Double minimumEngineSpeed, Double averageEngineSpeed, Double maximumEngineSpeed, Double totalWorkingHours, Double totalWorkingHoursMadeThatDay) {
+    public DatastoreResponse(String serialNumber, Double centerLatitude, Double centerLongitude, Double minimumFuelConsumption, Double averageFuelConsumption, Double maximumFuelConsumption, Double minimumEngineLoad, Double averageEngineLoad, Double maximumEngineLoad, Double minimumEngineSpeed, Double averageEngineSpeed, Double maximumEngineSpeed, Double minimumFrontPTOSpeed, Double averageFrontPTOSpeed, Double maximumFrontPTOSpeed, Double minimumRearPTOSpeed, Double averageRearPTOSpeed, Double maximumRearPTOSpeed, Double totalWorkingHours, Double totalWorkingHoursMadeThatDay) {
         this.serialNumber = serialNumber;
         this.centerLatitude = centerLatitude;
         this.centerLongitude = centerLongitude;
@@ -35,6 +39,12 @@ public class DatastoreResponse {
         this.minimumEngineSpeed = minimumEngineSpeed;
         this.averageEngineSpeed = averageEngineSpeed;
         this.maximumEngineSpeed = maximumEngineSpeed;
+        this.minimumFrontPTOSpeed = minimumFrontPTOSpeed;
+        this.averageFrontPTOSpeed = averageFrontPTOSpeed;
+        this.maximumFrontPTOSpeed = maximumFrontPTOSpeed;
+        this.minimumRearPTOSpeed = minimumRearPTOSpeed;
+        this.averageRearPTOSpeed = averageRearPTOSpeed;
+        this.maximumRearPTOSpeed = maximumRearPTOSpeed;
         this.totalWorkingHours = totalWorkingHours;
         this.totalWorkingHoursMadeThatDay = totalWorkingHoursMadeThatDay;
     }
@@ -133,6 +143,54 @@ public class DatastoreResponse {
 
     public void setMaximumEngineSpeed(Double maximumEngineSpeed) {
         this.maximumEngineSpeed = maximumEngineSpeed;
+    }
+
+    public Double getMinimumFrontPTOSpeed() {
+        return minimumFrontPTOSpeed;
+    }
+
+    public void setMinimumFrontPTOSpeed(Double minimumFrontPTOSpeed) {
+        this.minimumFrontPTOSpeed = minimumFrontPTOSpeed;
+    }
+
+    public Double getAverageFrontPTOSpeed() {
+        return averageFrontPTOSpeed;
+    }
+
+    public void setAverageFrontPTOSpeed(Double averageFrontPTOSpeed) {
+        this.averageFrontPTOSpeed = averageFrontPTOSpeed;
+    }
+
+    public Double getMaximumFrontPTOSpeed() {
+        return maximumFrontPTOSpeed;
+    }
+
+    public void setMaximumFrontPTOSpeed(Double maximumFrontPTOSpeed) {
+        this.maximumFrontPTOSpeed = maximumFrontPTOSpeed;
+    }
+
+    public Double getMinimumRearPTOSpeed() {
+        return minimumRearPTOSpeed;
+    }
+
+    public void setMinimumRearPTOSpeed(Double minimumRearPTOSpeed) {
+        this.minimumRearPTOSpeed = minimumRearPTOSpeed;
+    }
+
+    public Double getAverageRearPTOSpeed() {
+        return averageRearPTOSpeed;
+    }
+
+    public void setAverageRearPTOSpeed(Double averageRearPTOSpeed) {
+        this.averageRearPTOSpeed = averageRearPTOSpeed;
+    }
+
+    public Double getMaximumRearPTOSpeed() {
+        return maximumRearPTOSpeed;
+    }
+
+    public void setMaximumRearPTOSpeed(Double maximumRearPTOSpeed) {
+        this.maximumRearPTOSpeed = maximumRearPTOSpeed;
     }
 
     public Double getTotalWorkingHours() {
