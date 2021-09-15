@@ -30,6 +30,7 @@ public class BQQueries {
             "avg(spd_rear_pto)," +
             "max(spd_rear_pto) " +
             "FROM claas_telematics_dataset.tlmtcs_tbl WHERE ";
+    //TODO: FROM -> SELECT * FROM claas_telematics_dataset.tlmtcs_tbl_date WHERE date BETWEEN DATETIME("2020-03-14") and DATETIME("2020-03-15"), or given datetime
     public static Map<String, String> queries;
 
     public static String selectQuery(String constantQuery, String column, String value, boolean getCoordinates) {
