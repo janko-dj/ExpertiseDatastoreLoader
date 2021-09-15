@@ -13,17 +13,16 @@ public class DatastoreResponse {
     private Double minimumEngineLoad;
     private Double averageEngineLoad;
     private Double maximumEngineLoad;
+    private Double minimumEngineSpeed;
+    private Double averageEngineSpeed;
+    private Double maximumEngineSpeed;
     private Double totalWorkingHours;
     private Double totalWorkingHoursMadeThatDay;
 
     public DatastoreResponse() {
     }
 
-    public DatastoreResponse(String serialNumber, Double centerLatitude, Double centerLongitude,
-                             Double minimumFuelConsumption, Double averageFuelConsumption,
-                             Double maximumFuelConsumption, Double minimumEngineLoad,
-                             Double averageEngineLoad, Double maximumEngineLoad, Double totalWorkingHours,
-                             Double totalWorkingHoursMadeThatDay) {
+    public DatastoreResponse(String serialNumber, Double centerLatitude, Double centerLongitude, Double minimumFuelConsumption, Double averageFuelConsumption, Double maximumFuelConsumption, Double minimumEngineLoad, Double averageEngineLoad, Double maximumEngineLoad, Double minimumEngineSpeed, Double averageEngineSpeed, Double maximumEngineSpeed, Double totalWorkingHours, Double totalWorkingHoursMadeThatDay) {
         this.serialNumber = serialNumber;
         this.centerLatitude = centerLatitude;
         this.centerLongitude = centerLongitude;
@@ -33,6 +32,9 @@ public class DatastoreResponse {
         this.minimumEngineLoad = minimumEngineLoad;
         this.averageEngineLoad = averageEngineLoad;
         this.maximumEngineLoad = maximumEngineLoad;
+        this.minimumEngineSpeed = minimumEngineSpeed;
+        this.averageEngineSpeed = averageEngineSpeed;
+        this.maximumEngineSpeed = maximumEngineSpeed;
         this.totalWorkingHours = totalWorkingHours;
         this.totalWorkingHoursMadeThatDay = totalWorkingHoursMadeThatDay;
     }
@@ -107,6 +109,30 @@ public class DatastoreResponse {
 
     public void setMaximumEngineLoad(Double maximumEngineLoad) {
         this.maximumEngineLoad = maximumEngineLoad;
+    }
+
+    public Double getMinimumEngineSpeed() {
+        return minimumEngineSpeed;
+    }
+
+    public void setMinimumEngineSpeed(Double minimumEngineSpeed) {
+        this.minimumEngineSpeed = minimumEngineSpeed;
+    }
+
+    public Double getAverageEngineSpeed() {
+        return averageEngineSpeed;
+    }
+
+    public void setAverageEngineSpeed(Double averageEngineSpeed) {
+        this.averageEngineSpeed = averageEngineSpeed;
+    }
+
+    public Double getMaximumEngineSpeed() {
+        return maximumEngineSpeed;
+    }
+
+    public void setMaximumEngineSpeed(Double maximumEngineSpeed) {
+        this.maximumEngineSpeed = maximumEngineSpeed;
     }
 
     public Double getTotalWorkingHours() {

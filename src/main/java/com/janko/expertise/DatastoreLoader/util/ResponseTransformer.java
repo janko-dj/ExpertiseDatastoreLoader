@@ -17,6 +17,9 @@ public class ResponseTransformer {
         datastoreResponse.setMinimumEngineLoad(entity.getDouble(DatastoreConstants.MINIMUM_ENGINE_LOAD));
         datastoreResponse.setAverageEngineLoad(entity.getDouble(DatastoreConstants.AVERAGE_ENGINE_LOAD));
         datastoreResponse.setMaximumEngineLoad(entity.getDouble(DatastoreConstants.MAXIMUM_ENGINE_LOAD));
+        datastoreResponse.setMinimumEngineSpeed(entity.getDouble(DatastoreConstants.MINIMUM_ENGINE_SPEED));
+        datastoreResponse.setAverageEngineSpeed(entity.getDouble(DatastoreConstants.AVERAGE_ENGINE_SPEED));
+        datastoreResponse.setMaximumEngineSpeed(entity.getDouble(DatastoreConstants.MAXIMUM_ENGINE_SPEED));
         datastoreResponse.setTotalWorkingHours(entity.getDouble(DatastoreConstants.TOTAL_WORKING_HOURS));
         datastoreResponse.setTotalWorkingHoursMadeThatDay(entity.getDouble(DatastoreConstants.TOTAL_WORKING_HOURS_THAT_DAY));
         return datastoreResponse;
