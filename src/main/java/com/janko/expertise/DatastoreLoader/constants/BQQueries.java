@@ -12,6 +12,9 @@ public class BQQueries {
     public static final String SELECT_MIN_ENGINE_SPEED = "SELECT MIN(engn_spd) as minimumEngineSpeed FROM claas_telematics_dataset.tlmtcs_tbl WHERE engn_spd > 0 AND ";
     public static final String SELECT_MIN_SPEED_FRONT_PTO = "SELECT MIN(spd_front_pto) as minimumSpeedFrontPTO FROM claas_telematics_dataset.tlmtcs_tbl WHERE spd_front_pto > 0 AND ";
     public static final String SELECT_MIN_SPEED_REAR_PTO = "SELECT MIN(spd_rear_pto) as minimumSpeedRearPTO FROM claas_telematics_dataset.tlmtcs_tbl WHERE spd_rear_pto > 0 AND ";
+    /**
+     * In real code should use CURRENT_DATE
+     */
     public static final String SELECT_NEEDED_VALUES = "SELECT " +
             "min(gps_long)," +
             "max(gps_long)," +
@@ -31,6 +34,7 @@ public class BQQueries {
             "max(spd_rear_pto) " +
             "FROM claas_telematics_dataset.tlmtcs_tbl WHERE ";
     //TODO: FROM -> SELECT * FROM claas_telematics_dataset.tlmtcs_tbl_date WHERE date BETWEEN DATETIME("2020-03-14") and DATETIME("2020-03-15"), or given datetime
+
     public static Map<String, String> queries;
 
     public static String selectQuery(String constantQuery, String column, String value, boolean getCoordinates) {
