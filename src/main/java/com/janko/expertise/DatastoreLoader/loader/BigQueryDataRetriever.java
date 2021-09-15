@@ -72,19 +72,12 @@ public class BigQueryDataRetriever {
     }
 
     private void bigqueryToDatastore(String sn) throws InterruptedException {
-        logger.info("{} started executing the task", Thread.currentThread().getName());
+        logger.info("{} started executing the task for serial number {}", Thread.currentThread().getName(), sn);
+        long startTime = System.currentTimeMillis();
 
         List<GPSCoordinate> gpsCoordinates = new ArrayList<>();
-        Map<String, List<GPSCoordinate>> machineCoordinatesMap = new HashMap<>();
 
-        TableResult minWorkHour = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_WORK_HOUR, "sn", sn));
-        TableResult maxWorkHour = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_WORK_HOUR, "sn", sn));
-        TableResult minLongitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_GPS_LONGITUDE, "sn", sn));
-        TableResult maxLongitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_GPS_LONGITUDE, "sn", sn));
-        TableResult minLatitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MIN_GPS_LATITUDE, "sn", sn));
-        TableResult maxLatitude = getResult(BQQueries.selectQuery(BQQueries.SELECT_MAX_GPS_LATITUDE, "sn", sn));
-
-        TableResult gpsCoordinatesResult = getResult(BQQueries.selectQuery(BQQueries.SELECT_COORDINATES, "sn", sn));
+        TableResult gpsCoordinatesResult = getResult(BQQueries.selectQuery(BQQueries.SELECT_COORDINATES, "sn", sn, true));
         for (FieldValueList row : gpsCoordinatesResult.iterateAll()) {
 
             gpsCoordinates.add(new GPSCoordinate(Double.valueOf(row.get("gps_lat").getStringValue()),
@@ -93,41 +86,45 @@ public class BigQueryDataRetriever {
         gpscCache.addGpsCoordinates(sn, gpsCoordinates);
 
         for (String descriptionKey : BQQueries.queries.keySet()) {
-            TableResult result = getResult(BQQueries.selectQuery(BQQueries.queries.get(descriptionKey), "sn", sn));
+            TableResult result = getResult(BQQueries.selectQuery(BQQueries.queries.get(descriptionKey), "sn", sn, false));
             Double value = getDoubleValue(result, descriptionKey);
             datastoreKeyValueMap.put(descriptionKey, value);
         }
-        Double totalWorkingHours = getDoubleValue(maxWorkHour, "max");
-        Double totalWorkingHoursMadeThatDay = totalWorkingHours - getDoubleValue(minWorkHour, "min");
-        Double centerLongitude = (getDoubleValue(maxLongitude, "max") + getDoubleValue(minLongitude, "min")) / 2;
-        Double centerLatitude = (getDoubleValue(maxLatitude, "max") + getDoubleValue(minLatitude, "min")) / 2;
+        TableResult allResults = getResult(BQQueries.selectQuery(BQQueries.SELECT_NEEDED_VALUES, "sn", sn, false));
+        FieldValueList fieldValues = allResults.iterateAll().iterator().next();
+
+        Double totalWorkingHours = fieldValues.get(5).getDoubleValue();
+        Double totalWorkingHoursMadeThatDay = totalWorkingHours - fieldValues.get(4).getDoubleValue();
+        Double centerLongitude = (fieldValues.get(1).getDoubleValue() + fieldValues.get(0).getDoubleValue()) / 2;
+        Double centerLatitude = (fieldValues.get(3).getDoubleValue() + fieldValues.get(2).getDoubleValue()) / 2;
 
         Key taskKey = datastoreService.getTaskKey("claas", sn);
 
         Entity task = Entity.newBuilder(taskKey)
-                .set(DatastoreConstants.TOTAL_WORKING_HOURS, totalWorkingHours.toString())
-                .set(DatastoreConstants.TOTAL_WORKING_HOURS_THAT_DAY, totalWorkingHoursMadeThatDay.toString())
-                .set(DatastoreConstants.MAP_CENTER_LATITUDE, centerLatitude.toString())
-                .set(DatastoreConstants.MAP_CENTER_LONGITUDE, centerLongitude.toString())
-                .set(DatastoreConstants.MINIMUM_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_ENGINE_LOAD).toString())
-                .set(DatastoreConstants.AVERAGE_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_ENGINE_LOAD).toString())
-                .set(DatastoreConstants.MAXIMUM_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_ENGINE_LOAD).toString())
-                .set(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION).toString())
-                .set(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION).toString())
-                .set(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION).toString())
-                .set(DatastoreConstants.MINIMUM_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_ENGINE_SPEED).toString())
-                .set(DatastoreConstants.AVERAGE_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_ENGINE_SPEED).toString())
-                .set(DatastoreConstants.MAXIMUM_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_ENGINE_SPEED).toString())
-                .set(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO).toString())
-                .set(DatastoreConstants.AVERAGE_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_SPEED_FRONT_PTO).toString())
-                .set(DatastoreConstants.MAXIMUM_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_SPEED_FRONT_PTO).toString())
-                .set(DatastoreConstants.MINIMUM_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_SPEED_REAR_PTO).toString())
-                .set(DatastoreConstants.AVERAGE_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.AVERAGE_SPEED_REAR_PTO).toString())
-                .set(DatastoreConstants.MAXIMUM_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.MAXIMUM_SPEED_REAR_PTO).toString())
+                .set(DatastoreConstants.TOTAL_WORKING_HOURS, totalWorkingHours)
+                .set(DatastoreConstants.TOTAL_WORKING_HOURS_THAT_DAY, totalWorkingHoursMadeThatDay)
+                .set(DatastoreConstants.MAP_CENTER_LATITUDE, centerLatitude)
+                .set(DatastoreConstants.MAP_CENTER_LONGITUDE, centerLongitude)
+                .set(DatastoreConstants.MINIMUM_ENGINE_LOAD, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_ENGINE_LOAD))
+                .set(DatastoreConstants.AVERAGE_ENGINE_LOAD, fieldValues.get(6).getDoubleValue())
+                .set(DatastoreConstants.MAXIMUM_ENGINE_LOAD, fieldValues.get(7).getDoubleValue())
+                .set(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION))
+                .set(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION, fieldValues.get(8).getDoubleValue())
+                .set(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION, fieldValues.get(9).getDoubleValue())
+                .set(DatastoreConstants.MINIMUM_ENGINE_SPEED, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_ENGINE_SPEED))
+                .set(DatastoreConstants.AVERAGE_ENGINE_SPEED, fieldValues.get(10).getDoubleValue())
+                .set(DatastoreConstants.MAXIMUM_ENGINE_SPEED, fieldValues.get(11).getDoubleValue())
+                .set(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_SPEED_FRONT_PTO))
+                .set(DatastoreConstants.AVERAGE_SPEED_FRONT_PTO, fieldValues.get(12).getDoubleValue())
+                .set(DatastoreConstants.MAXIMUM_SPEED_FRONT_PTO, fieldValues.get(13).getDoubleValue())
+                .set(DatastoreConstants.MINIMUM_SPEED_REAR_PTO, datastoreKeyValueMap.get(DatastoreConstants.MINIMUM_SPEED_REAR_PTO))
+                .set(DatastoreConstants.AVERAGE_SPEED_REAR_PTO, fieldValues.get(14).getDoubleValue())
+                .set(DatastoreConstants.MAXIMUM_SPEED_REAR_PTO, fieldValues.get(15).getDoubleValue())
                 .build();
 
         datastoreService.putEntity(task);
-        logger.info("{} finished execution.\n{} uploaded to the Datastore", Thread.currentThread().getName(), task);
+        Long methodExecutionTime = System.currentTimeMillis() - startTime;
+        logger.info("{} finished execution.\nFinished in {} milliseconds", Thread.currentThread().getName(), methodExecutionTime);
     }
 
     private double getDoubleValue(TableResult result, String key) {
@@ -135,6 +132,7 @@ public class BigQueryDataRetriever {
     }
 
     private TableResult getResult(String query) throws InterruptedException {
+        logger.info("Query called: {}", query);
         QueryJobConfiguration getDistinctSNJob = QueryJobConfiguration.newBuilder(
                 query)
                 .setUseLegacySql(false)

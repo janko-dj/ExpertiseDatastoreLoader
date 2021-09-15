@@ -8,25 +8,17 @@ public class ResponseTransformer {
 
     public static DatastoreResponse transformResponse(Entity entity, String sn) {
         DatastoreResponse datastoreResponse = new DatastoreResponse();
-        datastoreResponse.setCenterLatitude(Double.valueOf(entity.getString(DatastoreConstants.MAP_CENTER_LATITUDE)));
-        datastoreResponse.setCenterLongitude(Double.valueOf(entity.getString(DatastoreConstants.MAP_CENTER_LONGITUDE)));
+        datastoreResponse.setCenterLatitude(entity.getDouble(DatastoreConstants.MAP_CENTER_LATITUDE));
+        datastoreResponse.setCenterLongitude(entity.getDouble(DatastoreConstants.MAP_CENTER_LONGITUDE));
         datastoreResponse.setSerialNumber(sn);
-        datastoreResponse.setMinimumFuelConsumption(Double
-                .valueOf(entity.getString(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION)));
-        datastoreResponse.setAverageFuelConsumption(Double
-                .valueOf(entity.getString(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION)));
-        datastoreResponse.setMaximumFuelConsumption(Double
-                .valueOf(entity.getString(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION)));
-        datastoreResponse.setMinimumEngineLoad(Double
-                .valueOf(entity.getString(DatastoreConstants.MINIMUM_ENGINE_LOAD)));
-        datastoreResponse.setAverageEngineLoad(Double
-                .valueOf(entity.getString(DatastoreConstants.AVERAGE_ENGINE_LOAD)));
-        datastoreResponse.setMaximumEngineLoad(Double
-                .valueOf(entity.getString(DatastoreConstants.MAXIMUM_ENGINE_LOAD)));
-        datastoreResponse.setTotalWorkingHours(Double
-                .valueOf(entity.getString(DatastoreConstants.TOTAL_WORKING_HOURS)));
-        datastoreResponse.setTotalWorkingHoursMadeThatDay(Double
-                .valueOf(entity.getString(DatastoreConstants.TOTAL_WORKING_HOURS_THAT_DAY)));
+        datastoreResponse.setMinimumFuelConsumption(entity.getDouble(DatastoreConstants.MINIMUM_FUEL_CONSUMPTION));
+        datastoreResponse.setAverageFuelConsumption(entity.getDouble(DatastoreConstants.AVERAGE_FUEL_CONSUMPTION));
+        datastoreResponse.setMaximumFuelConsumption(entity.getDouble(DatastoreConstants.MAXIMUM_FUEL_CONSUMPTION));
+        datastoreResponse.setMinimumEngineLoad(entity.getDouble(DatastoreConstants.MINIMUM_ENGINE_LOAD));
+        datastoreResponse.setAverageEngineLoad(entity.getDouble(DatastoreConstants.AVERAGE_ENGINE_LOAD));
+        datastoreResponse.setMaximumEngineLoad(entity.getDouble(DatastoreConstants.MAXIMUM_ENGINE_LOAD));
+        datastoreResponse.setTotalWorkingHours(entity.getDouble(DatastoreConstants.TOTAL_WORKING_HOURS));
+        datastoreResponse.setTotalWorkingHoursMadeThatDay(entity.getDouble(DatastoreConstants.TOTAL_WORKING_HOURS_THAT_DAY));
         return datastoreResponse;
     }
 }

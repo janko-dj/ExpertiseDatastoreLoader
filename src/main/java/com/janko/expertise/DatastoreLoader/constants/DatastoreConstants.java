@@ -27,22 +27,10 @@ public class DatastoreConstants {
 
     static {
         listOfDatastoreConstants  = new ArrayList<>();
-        listOfDatastoreConstants.add(TOTAL_WORKING_HOURS);
-        listOfDatastoreConstants.add(TOTAL_WORKING_HOURS_THAT_DAY);
         listOfDatastoreConstants.add(MINIMUM_FUEL_CONSUMPTION);
-        listOfDatastoreConstants.add(AVERAGE_FUEL_CONSUMPTION);
-        listOfDatastoreConstants.add(MAXIMUM_FUEL_CONSUMPTION);
         listOfDatastoreConstants.add(MINIMUM_ENGINE_LOAD);
-        listOfDatastoreConstants.add(AVERAGE_ENGINE_LOAD);
-        listOfDatastoreConstants.add(MAXIMUM_ENGINE_LOAD);
         listOfDatastoreConstants.add(MINIMUM_ENGINE_SPEED);
-        listOfDatastoreConstants.add(AVERAGE_ENGINE_SPEED);
-        listOfDatastoreConstants.add(MAXIMUM_ENGINE_SPEED);
         listOfDatastoreConstants.add(MINIMUM_SPEED_FRONT_PTO);
-        listOfDatastoreConstants.add(AVERAGE_SPEED_FRONT_PTO);
-        listOfDatastoreConstants.add(MAXIMUM_SPEED_FRONT_PTO);
         listOfDatastoreConstants.add(MINIMUM_SPEED_REAR_PTO);
-        listOfDatastoreConstants.add(AVERAGE_SPEED_REAR_PTO);
-        listOfDatastoreConstants.add(MAXIMUM_SPEED_REAR_PTO);
     }
 }
